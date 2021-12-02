@@ -15,7 +15,7 @@ func main() {
 		for j := 0; j < 3; j++ {
 			num, err := strconv.Atoi(lines[i+j])
 			if err != nil {
-				break
+				continue
 			}
 			total += num
 		}
