@@ -4,9 +4,12 @@ import (
 	"ben657/aoc21_util"
 	"fmt"
 	"strconv"
+	"time"
 )
 
 func main() {
+	start := time.Now()
+
 	lines := aoc21_util.ReadInput()
 	var nums []int
 
@@ -30,4 +33,6 @@ func main() {
 	}
 
 	fmt.Println("Total increases: ", increases)
+
+	fmt.Println("Time: ", time.Since(start))
 }
