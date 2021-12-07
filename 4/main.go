@@ -68,7 +68,17 @@ func main() {
 	fmt.Println("Time: ", time.Since(start))
 }
 
+func contains(slice []int, val int) bool {
+	for _, v := range slice {
+		if v == val {
+			return true
+		}
+	}
+	return false
+}
+
 func runInputs(boards [][5][5]Cell, inputs []int) int {
+	var completedBoards []int
 	for _, num := range inputs {
 		for b, board := range boards {
 			for r, row := range board {
@@ -77,7 +87,12 @@ func runInputs(boards [][5][5]Cell, inputs []int) int {
 						boards[b][r][c].marked = true
 						result, sum := findBingo(boards[b], r, c)
 						if result {
-							return sum
+							if !contains(completedBoards, b) {
+								completedBoards = append(completedBoards, b)
+							}
+							if len(completedBoards) == len(boards) {
+								return sum * num
+							}
 						}
 					}
 				}
@@ -98,11 +113,7 @@ func findBingo(board [5][5]Cell, row int, col int) (bool, int) {
 	}
 
 	if win {
-		sum := 0
-		for r := 0; r < 5; r++ {
-			sum += board[r][col].val
-		}
-		return true, sum
+		return true, sumUnmarked(board)
 	}
 
 	win = true
@@ -114,12 +125,20 @@ func findBingo(board [5][5]Cell, row int, col int) (bool, int) {
 	}
 
 	if win {
-		sum := 0
-		for c := 0; c < 5; c++ {
-			sum += board[row][c].val
-		}
-		return true, sum
+		return true, sumUnmarked(board)
 	}
 
 	return false, -1
+}
+
+func sumUnmarked(board [5][5]Cell) int {
+	sum := 0
+	for r := 0; r < 5; r++ {
+		for c := 0; c < 5; c++ {
+			if !board[r][c].marked {
+				sum += board[r][c].val
+			}
+		}
+	}
+	return sum
 }
