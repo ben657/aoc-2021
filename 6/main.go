@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func iterate(fish *[]uint64) {
+func p1iterate(fish *[]uint64) {
 	for i, f := range *fish {
 		if f == 0 {
 			*fish = append(*fish, 8)
@@ -33,20 +33,49 @@ func p1() {
 	}
 
 	for i := 0; i < 256; i++ {
-		iterate(&fish)
+		p1iterate(&fish)
 	}
 
 	fmt.Println("Part 1: ", len(fish))
 }
 
-func p2() {
+func p2iterate(fish *[8]uint) {
+	oldFish := *fish
+	for i := 6; i > 0; i-- {
+		fish[i] = oldFish[i-1]
+	}
 
+	fish[7] = 0
+	for i := uint(0); i < fish[0]; i++ {
+		fish[7]++
+		fish[4]++
+	}
+}
+
+func p2() {
+	lines := aoc21_util.ReadInput()
+
+	numStrs := strings.Split(lines[0], ",")
+	var fish [8]uint
+	for _, numStr := range numStrs {
+		num, err := strconv.Atoi(numStr)
+		if err != nil {
+			panic(err)
+		}
+		fish[num]++
+	}
+
+	for i := 0; i < 256; i++ {
+		p2iterate(&fish)
+	}
+
+	fmt.Println("Part 1: ", len(fish))
 }
 
 func main() {
 	start := time.Now()
 
-	p1()
+	p2()
 
 	fmt.Println("Time: ", time.Since(start))
 }
