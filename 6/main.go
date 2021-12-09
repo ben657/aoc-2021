@@ -39,24 +39,22 @@ func p1() {
 	fmt.Println("Part 1: ", len(fish))
 }
 
-func p2iterate(fish *[8]uint) {
+func p2iterate(fish *[9]uint) {
 	oldFish := *fish
-	for i := 6; i > 0; i-- {
-		fish[i] = oldFish[i-1]
+	for i := len(fish) - 2; i > 0; i-- {
+		fish[i] = oldFish[i+1]
 	}
 
-	fish[7] = 0
-	for i := uint(0); i < fish[0]; i++ {
-		fish[7]++
-		fish[4]++
-	}
+	fish[len(fish)-1] = fish[0]
+	fish[len(fish)-3] += fish[0]
+	fish[0] = oldFish[1]
 }
 
 func p2() {
 	lines := aoc21_util.ReadInput()
 
 	numStrs := strings.Split(lines[0], ",")
-	var fish [8]uint
+	var fish [9]uint
 	for _, numStr := range numStrs {
 		num, err := strconv.Atoi(numStr)
 		if err != nil {
@@ -66,10 +64,16 @@ func p2() {
 	}
 
 	for i := 0; i < 256; i++ {
+		fmt.Println(i)
 		p2iterate(&fish)
 	}
 
-	fmt.Println("Part 1: ", len(fish))
+	count := uint(0)
+	for _, f := range fish {
+		fmt.Println(f)
+		count += f
+	}
+	fmt.Println("Part 2: ", count)
 }
 
 func main() {
